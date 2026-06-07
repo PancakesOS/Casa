@@ -1,0 +1,11 @@
+[project]
+name = "casa"
+version = "0.1.0"
+description = "Dashboard de búsqueda de casas en Hermosillo"
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit",
+    "pandas",
+    "folium",
+    "streamlit-folium",
+]
