@@ -2,6 +2,7 @@ import glob
 import math
 import os
 
+import altair as alt
 import folium
 import pandas as pd
 import streamlit as st
@@ -423,13 +424,23 @@ with tab_stats:
         st.markdown("**Precio vs m² de construcción**")
         st.caption("Cada punto es una propiedad — ideal: abajo a la derecha (barata y grande)")
         scatter_df = df_stats[["Nombre", "Construccion", "Precio", "Colonia"]].copy()
-        st.scatter_chart(
-            scatter_df,
-            x="Construccion",
-            y="Precio",
-            color="Colonia",
-            size=200,
+        scatter = (
+            alt.Chart(scatter_df)
+            .mark_circle(size=180, opacity=0.85)
+            .encode(
+                x=alt.X("Construccion:Q", title="m² de construcción"),
+                y=alt.Y("Precio:Q", title="Precio (MXN)", axis=alt.Axis(format="$,.0f")),
+                color=alt.Color("Colonia:N", title="Colonia"),
+                tooltip=[
+                    alt.Tooltip("Nombre:N",      title="Propiedad"),
+                    alt.Tooltip("Colonia:N",      title="Colonia"),
+                    alt.Tooltip("Construccion:Q", title="m² construcción"),
+                    alt.Tooltip("Precio:Q",       title="Precio", format="$,.0f"),
+                ],
+            )
+            .properties(width="container")
         )
+        st.altair_chart(scatter, use_container_width=True)
 
 # ── Detalle ───────────────────────────────────────────────────────────────────
 with tab_detalle:
